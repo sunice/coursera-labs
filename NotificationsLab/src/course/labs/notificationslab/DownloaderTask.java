@@ -154,17 +154,15 @@ public class DownloaderTask extends AsyncTask<String, Void, String[]> {
 
 						// TODO: Check whether the result code is not MainActivity.IS_ALIVE
 
-						if (false || true) {
+						if (getResultCode() != MainActivity.IS_ALIVE) {
 
 							// TODO: If so, create a PendingIntent using the
 							// restartMainActivityIntent and set its flags
 							// to FLAG_UPDATE_CURRENT
-
-
+							final PendingIntent pendingIntent = PendingIntent.getActivity(
+									mApplicationContext, 0, restartMainActivtyIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
 							
-							
-
 							// Uses R.layout.custom_notification for the
 							// layout of the notification View. The xml
 							// file is in res/layout/custom_notification.xml
@@ -176,29 +174,31 @@ public class DownloaderTask extends AsyncTask<String, Void, String[]> {
 							// TODO: Set the notification View's text to
 							// reflect whether the download completed
 							// successfully
-
-
-
+							if (success)
+								mContentView.setTextViewText(R.id.text, successMsg);
+							else
+								mContentView.setTextViewText(R.id.text, failMsg);
 							
-
+							
 							// TODO: Use the Notification.Builder class to
 							// create the Notification. You will have to set
 							// several pieces of information. You can use
 							// android.R.drawable.stat_sys_warning
 							// for the small icon. You should also
 							// setAutoCancel(true).
-
-
-
-							
+                            Notification notification = new Notification.Builder(mApplicationContext)
+                            .setContentIntent(pendingIntent)
+                            .setContentTitle("Tweets")
+                            .setContent(mContentView)
+                            .setSmallIcon(android.R.drawable.stat_sys_warning)
+                            .setAutoCancel(true)
+                            .build();				
 							
 							
 							
 							// TODO: Send the notification
-
-
-							
-							
+                            NotificationManager notificationManager = (NotificationManager) mParentActivity.getSystemService(Context.NOTIFICATION_SERVICE);
+                            notificationManager.notify(MY_NOTIFICATION_ID, notification);							
 
 							Log.i(TAG, "Notification Area Notification sent");
 						}
